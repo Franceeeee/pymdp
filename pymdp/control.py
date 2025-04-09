@@ -504,20 +504,20 @@ def construct_policies(num_states, num_controls=None, policy_len=1, control_fac_
     if num_controls is None:
         num_controls = [num_states[c_idx] if c_idx in control_fac_idx else 1 for c_idx in range(num_factors)]
     
-    # Se non ci sono gruppi condivisi, trattiamo ogni fattore come indipendente
+    # Se non ci sono azioni condivise, trattiamo ogni fattore come indipendente
     if shared_control_groups is None:
         shared_control_groups = [[i] for i in control_fac_idx]
     
-    # Creiamo una lista di controlli raggruppati
+    # Lista di controlli raggruppati
     unique_controls = []
     for group in shared_control_groups:
-        unique_controls.append(num_controls[group[0]])  # Prendiamo il valore del primo elemento del gruppo
+        unique_controls.append(num_controls[group[0]])  
     
-    # Generiamo combinazioni di policy sulla versione ridotta dei controlli
+    # Genera combinazioni di policy sulla versione ridotta delle azioni di controllo
     x = unique_controls * policy_len
     reduced_policies = list(itertools.product(*[list(range(i)) for i in x]))
     
-    # Espandiamo le policy assegnando lo stesso valore agli elementi dello stesso gruppo
+    # Espande le policy assegnando lo stesso valore agli elementi dello stesso gruppo
     full_policies = []
     for reduced_policy in reduced_policies:
         expanded_policy = np.zeros((policy_len, num_factors), dtype=int)
